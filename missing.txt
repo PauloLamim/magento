@@ -1,0 +1,10 @@
+event_scheduler = on // on file my.conf or my.ini
+
+inventory.phtml is missing pre-order date expiring column on database and javascript to get date
+
+create event on mysql
+
+CREATE EVENT myevent
+    ON SCHEDULE EVERY 1 HOUR
+    DO
+      UPDATE QUERY or insert query or delete query
