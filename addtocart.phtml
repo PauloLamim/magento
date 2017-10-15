@@ -1,0 +1,81 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2012 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+
+<?php $_product = $this->getProduct(); 
+$productTypeId = $_product->getTypeId();
+?>
+<?php $buttonTitle = $this->__('Add to basket'); ?>
+<?php if ($_product->isSaleable()): ?>
+	<div class="add-to-cart v-centered-content">
+		<?php if($productTypeId != 'grouped' && $productTypeId != 'giftvoucher') { ?>
+			<?php /*ANKIT PATE 6/9/2015*/?>
+			<div class="qty-wrapper v-center">
+				<label for="qty"><?php echo $this->__('Qty:') ?></label>
+				<a href="#" class="qtycontrols" id="qtyminus"></a>
+				<input type="text" name="qty" id="qty" maxlength="12" value="<?php echo $this->getProductDefaultQty() * 1 ?>" title="<?php echo $this->__('Qty') ?>" class="input-text qty" />
+				<a href="#" class="qtycontrols" id="qtyplus"></a>
+			</div>
+			<script type="text/javascript">
+				jQuery(function(){
+					jQuery("a.qtycontrols").click(function(){
+						var qtyField = jQuery(this).parents("div.qty-wrapper").find("input#qty");
+						var qtyFieldVal = parseInt(jQuery(qtyField).val());
+						if(jQuery(this).attr("id") == "qtyplus"){
+							qtyFieldVal++;
+						}
+						else if(jQuery(this).attr("id") == "qtyminus"){
+							if(qtyFieldVal > 0){
+								qtyFieldVal--;
+							}
+						}
+						jQuery(qtyField).val(qtyFieldVal);
+						return false;
+					});
+				});
+			</script>
+			<?php /*ANKIT PATE 6/9/2015*/?>
+		<?php } else if($productTypeId === 'giftvoucher') { ?>
+        	<input type="hidden" name="qty" id="qty" value="1" title="<?php echo $this->__('Qty') ?>" />
+		<?php }?>
+        <!--test pre order -->
+        <?php
+            $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product);
+            if($stock->getPreOrder()==1) {
+                ?>
+                    <button type="button" title="Pre Order" class="button btn-cart v-center" onclick="productAddToCartForm.submit(this)"><span><span>Pre Order</span></span></button><br>
+            <?php
+                } else {
+                ?>
+                <button type="button" title="<?php echo $buttonTitle ?>" class="button btn-cart v-center"
+                        onclick="productAddToCartForm.submit(this)"><span><span><?php echo $buttonTitle ?></span></span>
+                </button>
+                <?php
+            }
+        ?>
+	</div>
+	<?php /*?><div class="paypal-wrapper"><?php echo $this->getChildHtml('', true, true) ?></div><?php */?>
+<?php endif; ?>
